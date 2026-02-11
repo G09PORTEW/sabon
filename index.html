@@ -1,1 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>xazny</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body{
+  height:100vh;
+  overflow:hidden;
+  background:#0a0a0a;
+  color:white;
+}
+
+/* ===== BACKGROUND ===== */
+.bg{
+  position:fixed;
+  inset:0;
+  background:linear-gradient(120deg,#050505,#111,#050505);
+  z-index:-2;
+}
+
+/* ===== OVERLAY ===== */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:#000;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:10;
+  cursor:pointer;
+}
+
+.overlay span{
+  padding:14px 34px;
+  border-radius:12px;
+  border:1px solid #333;
+  color:#aaa;
+  font-size:18px;
+}
+
+/* ===== PROFILE ===== */
+.profile{
+  position:absolute;
+  top:30%;
+  left:50%;
+  transform:translate(-50%,-30%);
+  text-align:center;
+  padding:30px 40px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.03);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 20px 50px rgba(0,0,0,0.7);
+  transition:0.3s ease;
+}
+
+.profile:hover{
+  transform:translate(-50%,-32%) scale(1.02);
+}
+
+.avatar{
+  width:100px;
+  height:100px;
+  border-radius:50%;
+  box-shadow:0 0 15px rgba(255,255,255,0.15);
+}
+
+.username{
+  margin-top:12px;
+  font-size:26px;
+  font-weight:500;
+  letter-spacing:2px;
+}
+
+.bio{
+  margin-top:6px;
+  font-size:13px;
+  color:#aaa;
+}
+
+.sub{
+  font-size:11px;
+  color:#555;
+}
+
+.animated-text{
+  margin-top:8px;
+  font-size:12px;
+  color:#777;
+  border-right:2px solid #777;
+  white-space:nowrap;
+  overflow:hidden;
+  animation:blink 0.8s steps(1) infinite;
+}
+
+.profile-views{
+  margin-top:8px;
+  font-size:11px;
+  color:#555;
+}
+
+/* ===== DISCORD BUTTON ===== */
+.discord-btn{
+  position:absolute;
+  top:15px;
+  right:15px;
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.15);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  transition:0.2s ease;
+}
+
+.discord-btn:hover{
+  transform:scale(1.08);
+}
+
+.discord-btn img{
+  width:18px;
+  filter:invert(1);
+}
+
+/* ===== PLAYER ===== */
+.player{
+  position:fixed;
+  bottom:25px;
+  left:50%;
+  transform:translateX(-50%);
+  width:430px;
+  padding:16px;
+  border-radius:22px;
+  background:rgba(255,255,255,0.04);
+  backdrop-filter:blur(25px);
+  border:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 20px 50px rgba(0,0,0,0.7);
+  display:flex;
+  align-items:center;
+}
+
+.cover{
+  width:55px;
+  height:55px;
+  border-radius:12px;
+}
+
+.info{
+  flex:1;
+  margin-left:14px;
+}
+
+.progress{
+  width:100%;
+  height:5px;
+  background:rgba(255,255,255,0.1);
+  border-radius:10px;
+  margin-top:8px;
+  overflow:hidden;
+}
+
+.bar{
+  height:100%;
+  width:0%;
+  border-radius:10px;
+  background:white;
+}
+
+.time{
+  font-size:11px;
+  margin-left:10px;
+  color:#777;
+}
+
+@keyframes blink{
+  50%{ border-color:transparent; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+<div class="overlay" id="overlay"><span>enter</span></div>
+
+<div class="profile">
+  <a href="https://discord.gg/xtazy" target="_blank" class="discord-btn">
+    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png">
+  </a>
+
+  <img class="avatar" src="nigga.png">
+  <div class="username">xazny</div>
+  <div class="bio">offline</div>
+  <div class="sub">.gg/xtazy</div>
+  <div class="animated-text" id="animatedText"></div>
+  <div class="profile-views" id="profileViews"></div>
+</div>
+
+<div class="player">
+  <img class="cover" id="cover" src="IMG_5419.jpeg">
+  <div class="info">
+    <h3 id="songTitle"></h3>
+    <p id="songArtist"></p>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+  </div>
+  <div class="time" id="time">0:00</div>
+</div>
+
+<audio id="audio"></audio>
+
+<script>
+const overlay = document.getElementById("overlay");
+const audio = document.getElementById("audio");
+const bar = document.getElementById("bar");
+const time = document.getElementById("time");
+
+const songs = [
+  { src:"fwm.mp3", title:"FWM", artist:"PARTYNEXTDOOR", cover:"IMG_5419.jpeg" },
+  { src:"loosemymind.mp3", title:"Loose My Mind", artist:"PARTYNEXTDOOR", cover:"IMG_5418.jpeg" }
+];
+
+let currentSong = 0;
+
+function playSong(index){
+  const song = songs[index];
+  audio.src = song.src;
+  document.getElementById("songTitle").textContent = song.title;
+  document.getElementById("songArtist").textContent = song.artist;
+  document.getElementById("cover").src = song.cover;
+  audio.play();
+}
+
+overlay.onclick = () => {
+  overlay.style.display = "none";
+  playSong(currentSong);
+};
+
+audio.onended = () => {
+  currentSong = (currentSong+1)%songs.length;
+  playSong(currentSong);
+};
+
+audio.ontimeupdate = () => {
+  if(audio.duration){
+    bar.style.width = (audio.currentTime/audio.duration*100)+"%";
+  }
+  const m = Math.floor(audio.currentTime/60);
+  const s = Math.floor(audio.currentTime%60).toString().padStart(2,"0");
+  time.textContent = `${m}:${s}`;
+};
+
+/* typing */
+const texts=["online","private","connected","loading..."];
+let ti=0,ci=0,del=false;
+function type(){
+  const el=document.getElementById("animatedText");
+  if(!del && ci<texts[ti].length){
+    el.textContent+=texts[ti][ci++];
+    setTimeout(type,120);
+  }else if(!del){
+    del=true; setTimeout(type,1000);
+  }else if(del && ci>0){
+    el.textContent=texts[ti].substring(0,--ci);
+    setTimeout(type,60);
+  }else{
+    del=false; ti=(ti+1)%texts.length;
+    setTimeout(type,400);
+  }
+}
+type();
+
+/* profile views */
+let views=localStorage.getItem("views")||0;
+views++;
+localStorage.setItem("views",views);
+document.getElementById("profileViews").textContent="views: "+views;
+</script>
+
+</body>
+</html>
 
