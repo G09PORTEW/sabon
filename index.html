@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>sabon was here</title>
+<title>sabon ultra-premium</title>
 
 <style>
 *{
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family: "Segoe UI", Arial, sans-serif;
+  font-family:"Segoe UI", Arial, sans-serif;
 }
 
 body{
@@ -24,9 +24,9 @@ body{
 .bg{
   position:fixed;
   inset:0;
-  background: url("https://images.unsplash.com/photo-1605902711622-cfb43c44338f?fit=crop&w=1400&q=80") center/cover no-repeat;
+  background:url("https://images.unsplash.com/photo-1605902711622-cfb43c44338f?fit=crop&w=1400&q=80") center/cover no-repeat;
   filter:blur(6px) brightness(0.3) contrast(1.1);
-  z-index:-2;
+  z-index:-3;
 }
 
 .bg::after{
@@ -34,6 +34,14 @@ body{
   position:absolute;
   inset:0;
   background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.8));
+}
+
+/* ===== PARTICLES ===== */
+#particles{
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  pointer-events:none;
 }
 
 /* ===== OVERLAY ===== */
@@ -46,6 +54,8 @@ body{
   align-items:center;
   z-index:10;
   cursor:pointer;
+  opacity:0;
+  animation:fadeIn 1s forwards;
 }
 
 .overlay span{
@@ -73,12 +83,13 @@ body{
   text-align:center;
   padding:35px 45px;
   border-radius:25px;
-  background:rgba(255,255,255,0.03);
-  backdrop-filter:blur(25px);
+  background:rgba(255,255,255,0.02);
+  backdrop-filter:blur(35px) saturate(150%);
   border:1px solid rgba(255,255,255,0.08);
-  box-shadow:0 25px 60px rgba(0,0,0,0.7);
+  box-shadow:0 25px 60px rgba(0,0,0,0.8), 0 0 25px rgba(255,255,255,0.1);
   transition:0.3s ease;
-  z-index:5;
+  opacity:0;
+  animation:fadeIn 1.2s forwards 0.5s;
 }
 
 .profile:hover{
@@ -89,7 +100,7 @@ body{
   width:110px;
   height:110px;
   border-radius:50%;
-  box-shadow:0 0 20px rgba(255,255,255,0.15);
+  box-shadow:0 0 25px rgba(255,255,255,0.15);
   transition:0.3s ease;
 }
 
@@ -166,13 +177,15 @@ body{
   width:460px;
   padding:18px;
   border-radius:25px;
-  background:rgba(255,255,255,0.04);
-  backdrop-filter:blur(35px);
+  background:rgba(255,255,255,0.03);
+  backdrop-filter:blur(35px) saturate(150%);
   border:1px solid rgba(255,255,255,0.08);
-  box-shadow:0 25px 60px rgba(0,0,0,0.7);
+  box-shadow:0 25px 60px rgba(0,0,0,0.8), 0 0 25px rgba(255,255,255,0.1);
   display:flex;
   align-items:center;
   justify-content:space-between;
+  opacity:0;
+  animation:fadeIn 1s forwards 1s;
 }
 
 .cover{
@@ -233,6 +246,7 @@ input[type=range]{
   margin-left:10px;
 }
 
+/* ===== ANIMATIONS ===== */
 @keyframes blink{
   50%{ border-color:transparent; }
 }
@@ -240,6 +254,11 @@ input[type=range]{
 @keyframes glowMove{
   0%{background-position:0%}
   100%{background-position:300%}
+}
+
+@keyframes fadeIn{
+  0%{opacity:0; transform:translateY(20px);}
+  100%{opacity:1; transform:translateY(0);}
 }
 
 /* ===== MOBILE ===== */
@@ -257,6 +276,7 @@ input[type=range]{
 <body>
 
 <div class="bg"></div>
+<canvas id="particles"></canvas>
 <div class="overlay" id="overlay"><span>CLICK TO ENTER</span></div>
 
 <div class="profile">
@@ -291,6 +311,52 @@ input[type=range]{
 <audio id="audio"></audio>
 
 <script>
+/* PARTICLES */
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const particles = [];
+const numParticles = 80;
+
+for(let i=0;i<numParticles;i++){
+  particles.push({
+    x: Math.random()*canvas.width,
+    y: Math.random()*canvas.height,
+    r: Math.random()*2+1,
+    d: Math.random()*1+0.2
+  });
+}
+
+function drawParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = "rgba(255,255,255,0.2)";
+  particles.forEach(p=>{
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fill();
+  });
+  moveParticles();
+}
+
+let angle = 0;
+function moveParticles(){
+  angle +=0.01;
+  particles.forEach(p=>{
+    p.y += Math.cos(angle+p.d)+0.5;
+    p.x += Math.sin(angle)*2;
+    if(p.x>canvas.width)p.x=0;
+    if(p.x<0)p.x=canvas.width;
+    if(p.y>canvas.height)p.y=0;
+  });
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+window.onresize = ()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+
+/* AUDIO + PLAYER */
 const overlay = document.getElementById("overlay");
 const audio = document.getElementById("audio");
 const bar = document.getElementById("bar");
@@ -334,61 +400,32 @@ overlay.onclick = () => {
   playSong();
 };
 
-playBtn.onclick = () => {
-  if(isPlaying) pauseSong();
-  else playSong();
-};
+playBtn.onclick = () => { isPlaying?pauseSong():playSong(); };
+prevBtn.onclick = () => { currentSong=(currentSong-1+songs.length)%songs.length; loadSong(currentSong); playSong(); };
+nextBtn.onclick = () => { currentSong=(currentSong+1)%songs.length; loadSong(currentSong); playSong(); };
+volumeSlider.oninput = ()=>{audio.volume = volumeSlider.value;};
 
-prevBtn.onclick = () => {
-  currentSong = (currentSong-1+songs.length)%songs.length;
-  loadSong(currentSong);
-  playSong();
-};
-
-nextBtn.onclick = () => {
-  currentSong = (currentSong+1)%songs.length;
-  loadSong(currentSong);
-  playSong();
-};
-
-volumeSlider.oninput = () => {
-  audio.volume = volumeSlider.value;
-};
-
-audio.ontimeupdate = () => {
-  if(audio.duration){
-    bar.style.width = (audio.currentTime/audio.duration*100)+"%";
-  }
+audio.ontimeupdate = ()=>{
+  if(audio.duration) bar.style.width = (audio.currentTime/audio.duration*100)+"%";
   const m = Math.floor(audio.currentTime/60);
   const s = Math.floor(audio.currentTime%60).toString().padStart(2,"0");
   time.textContent = `${m}:${s}`;
 };
+audio.onended = ()=>{ nextBtn.click(); };
 
-audio.onended = () => {
-  nextBtn.click();
-};
-
-/* typing animation */
+/* TYPING ANIMATION */
 const texts=["online","private","connected","loading..."];
 let ti=0,ci=0,del=false;
 function type(){
   const el=document.getElementById("animatedText");
-  if(!del && ci<texts[ti].length){
-    el.textContent+=texts[ti][ci++];
-    setTimeout(type,120);
-  }else if(!del){
-    del=true; setTimeout(type,800);
-  }else if(del && ci>0){
-    el.textContent=texts[ti].substring(0,--ci);
-    setTimeout(type,60);
-  }else{
-    del=false; ti=(ti+1)%texts.length;
-    setTimeout(type,400);
-  }
+  if(!del && ci<texts[ti].length){ el.textContent+=texts[ti][ci++]; setTimeout(type,120); }
+  else if(!del){ del=true; setTimeout(type,800); }
+  else if(del && ci>0){ el.textContent=texts[ti].substring(0,--ci); setTimeout(type,60); }
+  else{ del=false; ti=(ti+1)%texts.length; setTimeout(type,400); }
 }
 type();
 
-/* profile views */
+/* PROFILE VIEWS */
 let views=localStorage.getItem("views")||0;
 views++;
 localStorage.setItem("views",views);
@@ -397,4 +434,5 @@ document.getElementById("profileViews").textContent="views: "+views;
 
 </body>
 </html>
+
 
