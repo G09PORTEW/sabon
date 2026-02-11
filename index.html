@@ -24,8 +24,16 @@ body{
 .bg{
   position:fixed;
   inset:0;
-  background:linear-gradient(120deg,#050505,#111,#050505);
+  background: url("https://images.unsplash.com/photo-1605902711622-cfb43c44338f?fit=crop&w=1400&q=80") center/cover no-repeat;
+  filter:blur(6px) brightness(0.3) contrast(1.1);
   z-index:-2;
+}
+
+.bg::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.8));
 }
 
 /* ===== OVERLAY ===== */
@@ -41,11 +49,19 @@ body{
 }
 
 .overlay span{
-  padding:14px 34px;
-  border-radius:12px;
-  border:1px solid #333;
-  color:#aaa;
+  padding:16px 36px;
+  border-radius:14px;
+  border:1px solid #444;
+  color:#ccc;
   font-size:18px;
+  letter-spacing:1px;
+  transition:0.3s ease;
+}
+
+.overlay span:hover{
+  color:white;
+  border-color:white;
+  transform:scale(1.05);
 }
 
 /* ===== PROFILE ===== */
@@ -55,49 +71,55 @@ body{
   left:50%;
   transform:translate(-50%,-30%);
   text-align:center;
-  padding:30px 40px;
-  border-radius:20px;
+  padding:35px 45px;
+  border-radius:25px;
   background:rgba(255,255,255,0.03);
-  backdrop-filter:blur(20px);
+  backdrop-filter:blur(25px);
   border:1px solid rgba(255,255,255,0.08);
-  box-shadow:0 20px 50px rgba(0,0,0,0.7);
+  box-shadow:0 25px 60px rgba(0,0,0,0.7);
   transition:0.3s ease;
+  z-index:5;
 }
 
 .profile:hover{
-  transform:translate(-50%,-32%) scale(1.02);
+  transform:translate(-50%,-32%) scale(1.03);
 }
 
 .avatar{
-  width:100px;
-  height:100px;
+  width:110px;
+  height:110px;
   border-radius:50%;
-  box-shadow:0 0 15px rgba(255,255,255,0.15);
+  box-shadow:0 0 20px rgba(255,255,255,0.15);
+  transition:0.3s ease;
 }
 
 .username{
-  margin-top:12px;
-  font-size:26px;
-  font-weight:500;
+  margin-top:14px;
+  font-size:28px;
+  font-weight:600;
   letter-spacing:2px;
+  background:linear-gradient(90deg,#fff,#ccc,#aaa);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:glowMove 4s linear infinite;
 }
 
 .bio{
   margin-top:6px;
-  font-size:13px;
+  font-size:14px;
   color:#aaa;
 }
 
 .sub{
-  font-size:11px;
+  font-size:12px;
   color:#555;
 }
 
 .animated-text{
-  margin-top:8px;
-  font-size:12px;
-  color:#777;
-  border-right:2px solid #777;
+  margin-top:10px;
+  font-size:13px;
+  color:#888;
+  border-right:2px solid #888;
   white-space:nowrap;
   overflow:hidden;
   animation:blink 0.8s steps(1) infinite;
@@ -105,8 +127,8 @@ body{
 
 .profile-views{
   margin-top:8px;
-  font-size:11px;
-  color:#555;
+  font-size:12px;
+  color:#666;
 }
 
 /* ===== DISCORD BUTTON ===== */
@@ -114,58 +136,85 @@ body{
   position:absolute;
   top:15px;
   right:15px;
-  width:36px;
-  height:36px;
-  border-radius:10px;
-  background:rgba(255,255,255,0.04);
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.05);
   border:1px solid rgba(255,255,255,0.15);
   display:flex;
   justify-content:center;
   align-items:center;
-  transition:0.2s ease;
+  transition:0.3s ease;
 }
 
 .discord-btn:hover{
-  transform:scale(1.08);
+  transform:scale(1.1);
+  box-shadow:0 0 15px rgba(255,255,255,0.3);
 }
 
 .discord-btn img{
-  width:18px;
+  width:20px;
   filter:invert(1);
 }
 
 /* ===== PLAYER ===== */
 .player{
   position:fixed;
-  bottom:25px;
+  bottom:30px;
   left:50%;
   transform:translateX(-50%);
-  width:430px;
-  padding:16px;
-  border-radius:22px;
+  width:460px;
+  padding:18px;
+  border-radius:25px;
   background:rgba(255,255,255,0.04);
-  backdrop-filter:blur(25px);
+  backdrop-filter:blur(35px);
   border:1px solid rgba(255,255,255,0.08);
-  box-shadow:0 20px 50px rgba(0,0,0,0.7);
+  box-shadow:0 25px 60px rgba(0,0,0,0.7);
   display:flex;
   align-items:center;
+  justify-content:space-between;
 }
 
 .cover{
-  width:55px;
-  height:55px;
-  border-radius:12px;
+  width:60px;
+  height:60px;
+  border-radius:15px;
 }
 
 .info{
   flex:1;
-  margin-left:14px;
+  margin-left:15px;
 }
 
+.song-controls{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+button{
+  background:rgba(255,255,255,0.1);
+  border:none;
+  padding:6px 10px;
+  border-radius:6px;
+  cursor:pointer;
+  color:#fff;
+  transition:0.2s ease;
+}
+
+button:hover{
+  background:rgba(255,255,255,0.2);
+}
+
+input[type=range]{
+  width:80px;
+}
+
+/* ===== PROGRESS BAR ===== */
 .progress{
   width:100%;
-  height:5px;
-  background:rgba(255,255,255,0.1);
+  height:6px;
+  background:rgba(255,255,255,0.15);
   border-radius:10px;
   margin-top:8px;
   overflow:hidden;
@@ -179,13 +228,28 @@ body{
 }
 
 .time{
-  font-size:11px;
+  font-size:12px;
+  color:#888;
   margin-left:10px;
-  color:#777;
 }
 
 @keyframes blink{
   50%{ border-color:transparent; }
+}
+
+@keyframes glowMove{
+  0%{background-position:0%}
+  100%{background-position:300%}
+}
+
+/* ===== MOBILE ===== */
+@media(max-width:500px){
+  .profile{padding:25px 30px;}
+  .avatar{width:90px;height:90px;}
+  .username{font-size:22px;}
+  .player{width:90%; padding:12px;}
+  .cover{width:50px;height:50px;}
+  input[type=range]{width:60px;}
 }
 </style>
 </head>
@@ -193,7 +257,7 @@ body{
 <body>
 
 <div class="bg"></div>
-<div class="overlay" id="overlay"><span>CLICK TO FUCKING ENTER</span></div>
+<div class="overlay" id="overlay"><span>CLICK TO ENTER</span></div>
 
 <div class="profile">
   <a href="https://discord.gg/xorev" target="_blank" class="discord-btn">
@@ -202,7 +266,7 @@ body{
 
   <img class="avatar" src="sabon.jpg">
   <div class="username">sabon</div>
-  <div class="bio">mas mabuti na ang matambok ang pepe kesa sa 10/10 face card</div>
+  <div class="bio">offline / private</div>
   <div class="sub">.gg/revshit</div>
   <div class="animated-text" id="animatedText"></div>
   <div class="profile-views" id="profileViews"></div>
@@ -215,6 +279,12 @@ body{
     <p id="songArtist"></p>
     <div class="progress"><div class="bar" id="bar"></div></div>
   </div>
+  <div class="song-controls">
+    <button id="prev">⏮</button>
+    <button id="play">▶️</button>
+    <button id="next">⏭</button>
+    <input type="range" id="volume" min="0" max="1" step="0.01" value="0.5">
+  </div>
   <div class="time" id="time">0:00</div>
 </div>
 
@@ -225,6 +295,10 @@ const overlay = document.getElementById("overlay");
 const audio = document.getElementById("audio");
 const bar = document.getElementById("bar");
 const time = document.getElementById("time");
+const playBtn = document.getElementById("play");
+const prevBtn = document.getElementById("prev");
+const nextBtn = document.getElementById("next");
+const volumeSlider = document.getElementById("volume");
 
 const songs = [
   { src:"fwm.mp3", title:"FWM", artist:"PARTYNEXTDOOR", cover:"IMG_5419.jpeg" },
@@ -232,24 +306,53 @@ const songs = [
 ];
 
 let currentSong = 0;
+let isPlaying = false;
 
-function playSong(index){
+function loadSong(index){
   const song = songs[index];
   audio.src = song.src;
   document.getElementById("songTitle").textContent = song.title;
   document.getElementById("songArtist").textContent = song.artist;
   document.getElementById("cover").src = song.cover;
+}
+
+function playSong(){
   audio.play();
+  isPlaying = true;
+  playBtn.textContent = "⏸";
+}
+
+function pauseSong(){
+  audio.pause();
+  isPlaying = false;
+  playBtn.textContent = "▶️";
 }
 
 overlay.onclick = () => {
   overlay.style.display = "none";
-  playSong(currentSong);
+  loadSong(currentSong);
+  playSong();
 };
 
-audio.onended = () => {
+playBtn.onclick = () => {
+  if(isPlaying) pauseSong();
+  else playSong();
+};
+
+prevBtn.onclick = () => {
+  currentSong = (currentSong-1+songs.length)%songs.length;
+  loadSong(currentSong);
+  playSong();
+};
+
+nextBtn.onclick = () => {
   currentSong = (currentSong+1)%songs.length;
-  playSong(currentSong);
+  loadSong(currentSong);
+  playSong();
+};
+
+volumeSlider.oninput = () => {
+  audio.volume = volumeSlider.value;
 };
 
 audio.ontimeupdate = () => {
@@ -261,7 +364,11 @@ audio.ontimeupdate = () => {
   time.textContent = `${m}:${s}`;
 };
 
-/* typing */
+audio.onended = () => {
+  nextBtn.click();
+};
+
+/* typing animation */
 const texts=["online","private","connected","loading..."];
 let ti=0,ci=0,del=false;
 function type(){
@@ -270,7 +377,7 @@ function type(){
     el.textContent+=texts[ti][ci++];
     setTimeout(type,120);
   }else if(!del){
-    del=true; setTimeout(type,1000);
+    del=true; setTimeout(type,800);
   }else if(del && ci>0){
     el.textContent=texts[ti].substring(0,--ci);
     setTimeout(type,60);
