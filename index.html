@@ -3,269 +3,297 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>XZY GPT</title>
+<title>XZY GPT v1.0</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fira+Code&display=swap" rel="stylesheet">
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Inter", sans-serif;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Inter",sans-serif;
 }
 
-body {
-  height: 100vh;
-  display: flex;
-  background: radial-gradient(circle at top left, #1a0000, #0a0000 60%);
-  color: #f5f5f5;
+body{
+  height:100vh;
+  display:flex;
+  background:#0a0000;
+  color:#f5f5f5;
+  overflow:hidden;
 }
 
-/* LOGIN */
-.login-screen {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* Animated red glow */
+body::before{
+  content:"";
+  position:fixed;
+  width:600px;
+  height:600px;
+  background:radial-gradient(circle,#ff000040,transparent 70%);
+  top:-200px;
+  left:-200px;
+  animation:glowMove 8s infinite alternate ease-in-out;
 }
-
-.login-card {
-  background: rgba(255,0,0,0.05);
-  backdrop-filter: blur(20px);
-  padding: 45px;
-  border-radius: 18px;
-  width: 360px;
-  box-shadow: 0 0 50px rgba(255,0,0,0.2);
-  text-align: center;
-}
-
-.login-card h2 {
-  margin-bottom: 20px;
-  font-weight: 600;
-  color: #ff3b3b;
-}
-
-.login-card input {
-  width: 100%;
-  padding: 14px;
-  border-radius: 10px;
-  border: 1px solid rgba(255,0,0,0.2);
-  background: rgba(255,0,0,0.05);
-  color: white;
-  margin-bottom: 15px;
-}
-
-.login-card button {
-  width: 100%;
-  padding: 14px;
-  border-radius: 10px;
-  border: none;
-  background: linear-gradient(90deg, #ff0000, #ff4d4d);
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.login-card button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 20px rgba(255,0,0,0.6);
+@keyframes glowMove{
+  from{transform:translate(0,0);}
+  to{transform:translate(200px,150px);}
 }
 
 /* SIDEBAR */
-.sidebar {
-  width: 260px;
-  background: rgba(255,0,0,0.04);
-  backdrop-filter: blur(20px);
-  border-right: 1px solid rgba(255,0,0,0.1);
-  padding: 25px;
-  display: flex;
-  flex-direction: column;
+.sidebar{
+  width:260px;
+  background:rgba(255,0,0,0.04);
+  backdrop-filter:blur(20px);
+  border-right:1px solid rgba(255,0,0,0.1);
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  z-index:2;
 }
 
-.logo {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 25px;
-  color: #ff4d4d;
+.logo{
+  font-weight:600;
+  font-size:18px;
+  color:#ff4d4d;
+  margin-bottom:10px;
 }
 
-.menu button {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 10px;
-  border: none;
-  background: rgba(255,0,0,0.08);
-  color: #eee;
-  cursor: pointer;
-  transition: 0.2s;
+.version{
+  font-size:12px;
+  opacity:0.6;
+  margin-bottom:20px;
 }
 
-.menu button:hover {
-  background: rgba(255,0,0,0.25);
+button{
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  background:rgba(255,0,0,0.08);
+  color:white;
+  cursor:pointer;
+  margin-bottom:8px;
+  transition:0.2s;
+}
+button:hover{
+  background:rgba(255,0,0,0.3);
 }
 
 /* MAIN */
-.main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+.main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  z-index:2;
 }
 
-.header {
-  padding: 20px 30px;
-  border-bottom: 1px solid rgba(255,0,0,0.1);
-  display: flex;
-  justify-content: space-between;
+.header{
+  padding:15px 20px;
+  border-bottom:1px solid rgba(255,0,0,0.1);
+  display:flex;
+  justify-content:space-between;
 }
 
-.chat {
-  flex: 1;
-  padding: 30px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
+.chat{
+  flex:1;
+  padding:25px;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
 }
 
-.message {
-  max-width: 70%;
-  padding: 16px 18px;
-  border-radius: 16px;
-  margin-bottom: 14px;
-  font-size: 14px;
-  animation: fadeIn 0.3s ease-in;
+.message{
+  max-width:75%;
+  padding:14px;
+  border-radius:14px;
+  margin-bottom:12px;
+  animation:fadeIn 0.2s ease-in;
 }
 
-.user {
-  align-self: flex-end;
-  background: linear-gradient(90deg, #ff0000, #ff4d4d);
-  color: white;
+.user{
+  align-self:flex-end;
+  background:linear-gradient(90deg,#ff0000,#ff4d4d);
 }
 
-.ai {
-  align-self: flex-start;
-  background: rgba(255,0,0,0.08);
-  border: 1px solid rgba(255,0,0,0.15);
+.ai{
+  align-self:flex-start;
+  background:rgba(255,0,0,0.08);
+  border:1px solid rgba(255,0,0,0.15);
 }
 
-.input-area {
-  padding: 20px;
-  border-top: 1px solid rgba(255,0,0,0.1);
-  display: flex;
-  gap: 12px;
+/* Code block */
+.code-block{
+  background:#0f0f0f;
+  padding:15px;
+  border-radius:10px;
+  font-family:"Fira Code",monospace;
+  font-size:13px;
+  position:relative;
+  margin-top:8px;
 }
 
-.chat-input {
-  flex: 1;
-  padding: 15px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,0,0,0.2);
-  background: rgba(255,0,0,0.05);
-  color: white;
+.copy-btn{
+  position:absolute;
+  top:8px;
+  right:8px;
+  font-size:11px;
+  padding:4px 8px;
+  background:#ff0000;
+  border:none;
+  border-radius:5px;
+  cursor:pointer;
 }
 
-.send {
-  padding: 15px 20px;
-  border-radius: 12px;
-  border: none;
-  background: linear-gradient(90deg, #ff0000, #ff4d4d);
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s;
+/* INPUT */
+.input-area{
+  padding:15px;
+  border-top:1px solid rgba(255,0,0,0.1);
+  display:flex;
+  gap:10px;
 }
 
-.send:hover {
-  box-shadow: 0 0 20px rgba(255,0,0,0.6);
-  transform: scale(1.05);
+textarea{
+  flex:1;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid rgba(255,0,0,0.2);
+  background:rgba(255,0,0,0.05);
+  color:white;
+  resize:none;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
+.send{
+  padding:12px 18px;
+  border-radius:10px;
+  border:none;
+  background:linear-gradient(90deg,#ff0000,#ff4d4d);
+  cursor:pointer;
 }
 
-.hidden { display: none; }
+/* Typing dots */
+.typing{
+  display:flex;
+  gap:5px;
+}
+.typing span{
+  width:6px;
+  height:6px;
+  background:#ff4d4d;
+  border-radius:50%;
+  animation:bounce 1s infinite;
+}
+.typing span:nth-child(2){animation-delay:0.2s;}
+.typing span:nth-child(3){animation-delay:0.4s;}
+
+@keyframes bounce{
+  0%,80%,100%{opacity:0.3;}
+  40%{opacity:1;}
+}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(4px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
 </style>
 </head>
 <body>
 
-<div class="login-screen" id="loginScreen">
-  <div class="login-card">
-    <h2>XZY GPT</h2>
-    <input type="text" id="username" placeholder="Enter username">
-    <button onclick="login()">Enter Workspace</button>
-  </div>
-</div>
-
-<div class="sidebar hidden" id="sidebar">
+<div class="sidebar">
   <div class="logo">XZY GPT</div>
-
-  <div class="menu">
-    <button onclick="setMode('coding')">💻 Coding Assistant</button>
-    <button onclick="setMode('debug')">🐞 Debug Code</button>
-    <button onclick="setMode('cyber')">🔐 Cybersecurity</button>
-    <button onclick="setMode('explain')">📘 Explain Code</button>
-  </div>
+  <div class="version">Dev Build v1.0</div>
+  <button onclick="newChat()">+ New Chat</button>
+  <button onclick="setMode('coding')">💻 Coding</button>
+  <button onclick="setMode('debug')">🐞 Debug</button>
+  <button onclick="setMode('cyber')">🔐 Cyber</button>
+  <button onclick="setMode('explain')">📘 Explain</button>
+  <button onclick="toggleTerminal()">🖥 Terminal Mode</button>
 </div>
 
-<div class="main hidden" id="mainApp">
+<div class="main">
   <div class="header">
-    <span>Developer AI Workspace</span>
+    <span id="modeDisplay">Mode: Coding</span>
     <span id="userDisplay"></span>
   </div>
 
   <div class="chat" id="chat"></div>
 
   <div class="input-area">
-    <input class="chat-input" id="userInput" placeholder="Ask XZY GPT...">
+    <textarea id="userInput" rows="1" placeholder="Ask XZY GPT..."></textarea>
     <button class="send" onclick="sendMessage()">Send</button>
   </div>
 </div>
 
 <script>
+let currentMode="coding";
+let terminalMode=false;
 
-let currentMode = "coding";
-
-function login() {
-  const user = document.getElementById("username").value;
-  if (!user) return;
-
-  document.getElementById("loginScreen").classList.add("hidden");
-  document.getElementById("sidebar").classList.remove("hidden");
-  document.getElementById("mainApp").classList.remove("hidden");
-  document.getElementById("userDisplay").innerText = user;
+function setMode(mode){
+  currentMode=mode;
+  document.getElementById("modeDisplay").innerText="Mode: "+mode;
 }
 
-function setMode(mode) {
-  currentMode = mode;
+function newChat(){
+  document.getElementById("chat").innerHTML="";
 }
 
-function fakeAIResponse(message) {
-  return "XZY GPT (Dev Mode): I received -> " + message;
+function toggleTerminal(){
+  terminalMode=!terminalMode;
+  document.body.style.background=terminalMode?"#000":"#0a0000";
 }
 
-async function sendMessage() {
-  const input = document.getElementById("userInput");
-  const chat = document.getElementById("chat");
-
-  if (!input.value) return;
-
-  chat.innerHTML += `<div class="message user">${input.value}</div>`;
-
-  // Simulated AI delay
-  setTimeout(() => {
-    chat.innerHTML += `<div class="message ai">${fakeAIResponse(input.value)}</div>`;
-    chat.scrollTop = chat.scrollHeight;
-  }, 600);
-
-  input.value = "";
+function addMessage(content,type){
+  const chat=document.getElementById("chat");
+  const msg=document.createElement("div");
+  msg.className="message "+type;
+  msg.innerHTML=content;
+  chat.appendChild(msg);
+  chat.scrollTop=chat.scrollHeight;
 }
 
+function fakeResponse(text){
+  if(text.includes("code")){
+    return `Here is example code:
+<div class="code-block">
+<button class="copy-btn" onclick="copyCode(this)">COPY</button>
+const x = 10;
+console.log(x);
+</div>`;
+  }
+  return "XZY GPT processed: "+text;
+}
+
+function sendMessage(){
+  const input=document.getElementById("userInput");
+  if(!input.value.trim()) return;
+
+  addMessage(input.value,"user");
+
+  const typing=document.createElement("div");
+  typing.className="message ai";
+  typing.innerHTML=`<div class="typing"><span></span><span></span><span></span></div>`;
+  document.getElementById("chat").appendChild(typing);
+
+  setTimeout(()=>{
+    typing.remove();
+    addMessage(fakeResponse(input.value),"ai");
+  },800);
+
+  input.value="";
+}
+
+function copyCode(btn){
+  const code=btn.parentElement.innerText.replace("COPY","");
+  navigator.clipboard.writeText(code);
+  btn.innerText="COPIED";
+  setTimeout(()=>btn.innerText="COPY",1000);
+}
+
+document.getElementById("userInput").addEventListener("keydown",function(e){
+  if(e.key==="Enter"&&!e.shiftKey){
+    e.preventDefault();
+    sendMessage();
+  }
+});
 </script>
 
 </body>
